@@ -1,13 +1,13 @@
 "use server";
-import ogs from "open-graph-scraper";
 import { OgObject } from "open-graph-scraper/types";
 import { z } from "zod";
+import { getOgp } from "./getOgp";
 
 const FormSchema = z.object({
   url: z.string(),
 });
 
-export async function getOgpAction(
+export async function ogpAction(
   prevState: OgObject | null,
   formData: FormData,
 ) {
@@ -17,7 +17,7 @@ export async function getOgpAction(
   console.log(url);
 
   try {
-    const { result } = await ogs({ url });
+    const result = await getOgp(url);
     console.log(result);
 
     return result;
