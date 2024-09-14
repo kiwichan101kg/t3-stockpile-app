@@ -14,6 +14,18 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Article {
+  id        Int      @id @default(autoincrement()) // プライマリキー（自動インクリメント）
+  url       String   // 記事のURL
+  status    String  // 読んだかどうか（"read", "reading", "notRead"）
+  memo      String?  // メモ（オプション）
+  createdAt DateTime @default(now()) // 記事の保存日時
+  updatedAt DateTime @updatedAt // 記事の更新日時（自動で更新）
+  userId    String  // ユーザーID（リレーション用）
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+} 
+
 model Post {
     id        Int      @id @default(autoincrement())
     name      String
@@ -63,6 +75,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+
+    Article Article[]
 }
 
 model VerificationToken {
