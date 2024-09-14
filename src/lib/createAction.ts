@@ -32,7 +32,7 @@ export async function createAction(prevState: State, formData: FormData) {
       error: false,
       // 成功時はkeyを更新することでクライアントサイドで更新を検知する
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      key: uuidv4() as string,
+      key: uuidv4(),
     };
   } catch (error) {
     console.error("Error fetching:", error);
