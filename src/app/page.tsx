@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArticleList } from "./_components/ArticleList";
 import { UrlBox } from "./_components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
@@ -14,14 +15,17 @@ export default async function Home() {
           </div>
 
           {/* ログイン・ログアウトボタン */}
-          {/* <div>
-            <button className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600">
+          <div>
+            <Link
+              href={"api/auth/signin"}
+              className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
+            >
               ログイン
-            </button>
+            </Link>
             <button className="rounded-md bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600">
               ログアウト
             </button>
-          </div> */}
+          </div>
         </header>
 
         <UrlBox />
