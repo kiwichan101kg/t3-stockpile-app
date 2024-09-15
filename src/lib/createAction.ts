@@ -20,7 +20,6 @@ export async function createAction(prevState: State, formData: FormData) {
     status: formData.get("status"),
     memo: formData.get("memo"),
   });
-  console.log(url, status, memo);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const uuid: string = uuidv4();

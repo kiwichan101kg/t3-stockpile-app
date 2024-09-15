@@ -20,7 +20,6 @@ export async function updateAction(prevState: State, formData: FormData) {
     status: formData.get("status"),
     memo: formData.get("memo"),
   });
-  console.log(id, status, memo);
 
   try {
     await api.article.update({ id, status, memo });

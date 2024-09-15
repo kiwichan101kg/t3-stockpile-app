@@ -14,11 +14,9 @@ export async function ogpAction(
   const { url } = FormSchema.parse({
     url: formData.get("url"),
   });
-  console.log(url);
 
   try {
     const result = await getOgp(url);
-    console.log(result);
 
     return result;
   } catch (error) {
