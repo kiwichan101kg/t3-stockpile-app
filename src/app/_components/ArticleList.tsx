@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import { api } from "@/trpc/react";
+import { revalidatePath } from "next/cache";
 import { OgObject } from "open-graph-scraper/types";
 import React, { useState } from "react";
 
@@ -19,6 +20,18 @@ type ArticleListProps = {
 };
 export const ArticleList = ({ articleList }: ArticleListProps) => {
   const [activeTabr, setActiveTab] = useState("all");
+  const utils = api.useUtils();
+
+  const deleteArticle = api.article.delete.useMutation({
+    onSuccess: async () => {
+      revalidatePath("/");
+      // articleに関するキャッシュの削除
+      await utils.article.getAllArticle.invalidate();
+    },
+  });
+  const handleDelete = (id: string) => {
+    deleteArticle.mutate({ id });
+  };
 
   const tabs = [
     { key: "all", label: "すべて" },
@@ -55,10 +68,32 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
           .map((article) => (
             <div
               key={article.id}
-              className="flex flex-col justify-between rounded-lg bg-white p-6 shadow-md transition hover:shadow-lg"
+              className="relative flex flex-col justify-between rounded-lg bg-white p-6 shadow-md transition hover:shadow-lg"
             >
+              {/* 削除ボタン（右上に配置） */}
+              <button
+                onClick={() => handleDelete(article.id)}
+                className="absolute right-2 top-2 flex items-center justify-center rounded-full bg-gray-100 p-1 transition hover:bg-red-100 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="h-5 w-5 text-gray-400 hover:text-red-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              {/* 記事の内容 */}
               <div>
-                <h2 className="mb-2 text-xl font-semibold">
+                <h2 className="mb-2 mr-2 text-xl font-semibold">
                   {article.ogp?.ogTitle ?? "No Title"}
                 </h2>
                 {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 && (
@@ -71,6 +106,7 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                 )}
               </div>
 
+              {/* リンクボタン */}
               <div className="flex items-center justify-between pt-4">
                 <a
                   href={article.url}
@@ -78,7 +114,6 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
                 >
-                  {/* アイコンの追加 */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -100,7 +135,6 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                   href={`/article/${article.id}`}
                   className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
                 >
-                  {/* アイコンの追加 */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

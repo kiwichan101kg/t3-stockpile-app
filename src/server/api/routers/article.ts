@@ -33,6 +33,7 @@ export const articleRouter = createTRPCRouter({
         },
       });
     }),
+
   getAllArticle: protectedProcedure.query(async ({ ctx }) => {
     const articleList = await ctx.db.article.findMany({
       orderBy: { createdAt: "desc" },
@@ -40,6 +41,7 @@ export const articleRouter = createTRPCRouter({
     });
     return articleList;
   }),
+
   getArticleById: protectedProcedure
     .input(
       z.object({
@@ -95,6 +97,41 @@ export const articleRouter = createTRPCRouter({
         data: {
           status: input.status, // 新しいステータスをセット
           memo: input.memo ?? "", // メモが空の場合は空文字をセット
+        },
+      });
+    }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(), // 削除対象の記事ID
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 認証されているか確認
+      if (!ctx.session?.user?.id) {
+        throw new Error("User not authenticated");
+      }
+
+      // 該当する記事が存在するか確認
+      const article = await ctx.db.article.findUnique({
+        where: { id: input.id },
+      });
+
+      // 記事が存在しない場合のエラーハンドリング
+      if (!article) {
+        throw new Error("Article not found");
+      }
+
+      // 記事の所有者であるか確認
+      if (article.userId !== ctx.session.user.id) {
+        throw new Error("You do not have permission to delete this article");
+      }
+
+      // IDに一致する記事を削除
+      return ctx.db.article.delete({
+        where: {
+          id: input.id, // 一致する記事のIDを検索して削除
         },
       });
     }),
