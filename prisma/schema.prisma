@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Article {
-  id        Int      @id @default(autoincrement()) // プライマリキー（自動インクリメント）
+  id        String      @id @default(cuid()) // プライマリキー（自動インクリメント）
   url       String   // 記事のURL
   status    String  // 読んだかどうか（"read", "reading", "notRead"）
   memo      String?  // メモ（オプション）

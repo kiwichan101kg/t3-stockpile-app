@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArticleList } from "./_components/ArticleList";
+import { ArticleList, ArticleWithOgp } from "./_components/ArticleList";
 import { UrlBox } from "./_components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { getOgps } from "@/lib/getOgp";
 
 type Article = {
-  id: number;
+  id: string;
   url: string;
   status: string;
   memo: string | null;
@@ -16,9 +16,6 @@ type Article = {
 };
 
 export default async function Home() {
-  const articleList: Article[] = await api.article.getAllArticle();
-  const enrichedArticleList: ArticleList[] =
-    await enrichArticlesWithOgp(articleList);
   const session = await getServerAuthSession();
   if (!session) {
     return (
@@ -42,22 +39,25 @@ export default async function Home() {
       </div>
     );
   }
+  const articleList: Article[] = await api.article.getAllArticle();
+  const enrichedArticleList: ArticleWithOgp[] =
+    await enrichArticlesWithOgp(articleList);
 
   return (
     <HydrateClient>
       <main className="min-h-screen bg-gray-100 p-6">
         {/* Header Section */}
         <header className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Stockpile</h1>
-            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🎉</p>
-          </div>
+          <Link href={"/"}>
+            <h1 className="text-3xl font-bold text-gray-800">Tech📚Stock</h1>
+            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
+          </Link>
 
           {/* ログイン・ログアウトボタン */}
           <div>
             <Link
               href={"api/auth/signout"}
-              className="rounded-md bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
             >
               ログアウト
             </Link>
@@ -67,6 +67,36 @@ export default async function Home() {
         <UrlBox />
         <ArticleList articleList={enrichedArticleList} />
       </main>
+      <footer className="border-t border-gray-200 bg-white py-4">
+        <div className="container mx-auto flex flex-col items-center justify-between md:flex-row">
+          {/* コピーライト部分 */}
+          <p className="text-sm text-gray-600">
+            © {new Date().getFullYear()} Tech📚Stock. All rights reserved.
+          </p>
+
+          {/* リンク部分 */}
+          <div className="mt-4 flex space-x-6 md:mt-0">
+            <a
+              href="#"
+              className="text-sm text-gray-600 transition hover:text-gray-900"
+            >
+              利用規約
+            </a>
+            <a
+              href="#"
+              className="text-sm text-gray-600 transition hover:text-gray-900"
+            >
+              プライバシーポリシー
+            </a>
+            <a
+              href="#"
+              className="text-sm text-gray-600 transition hover:text-gray-900"
+            >
+              サポート
+            </a>
+          </div>
+        </div>
+      </footer>
     </HydrateClient>
   );
 }

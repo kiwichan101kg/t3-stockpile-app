@@ -1,0 +1,41 @@
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": SQLite database "db.sqlite" at "file:./db.sqlite"
+
+- Drift detected: Your database schema is not in sync with your migration history.
+
+The following is a summary of the differences between the expected database schema given your migrations files, and the actual schema of the database.
+
+It should be understood as the set of changes to get from the expected schema to the actual schema.
+
+[+] Added tables
+  - Account
+  - Article
+  - Post
+  - Session
+  - User
+  - VerificationToken
+
+[*] Changed the `Account` table
+  [+] Added unique index on columns (provider, providerAccountId)
+
+[*] Changed the `Post` table
+  [+] Added index on columns (name)
+
+[*] Changed the `Session` table
+  [+] Added unique index on columns (sessionToken)
+
+[*] Changed the `User` table
+  [+] Added unique index on columns (email)
+
+[*] Changed the `VerificationToken` table
+  [+] Added unique index on columns (identifier, token)
+  [+] Added unique index on columns (token)
+
+- The following migration(s) are applied to the database but missing from the local migrations directory: 20240913220419_test, 20240913225416_update_article_status_to_string
+
+[?25l[2K[1G[36m?[39m [1mWe need to reset the SQLite database "db.sqlite" at "file:./db.sqlite"
+Do you want to continue? All data will be lost.[22m [90m›[39m [90m(y/N)[39m[2K[1G[2K[1G[32m✔[39m [1mWe need to reset the SQLite database "db.sqlite" at "file:./db.sqlite"
+Do you want to continue? All data will be lost.[22m [90m…[39m no
+[?25h
+Reset cancelled.
