@@ -1,8 +1,8 @@
 import { getOgp } from "@/lib/getOgp";
 import { api, HydrateClient } from "@/trpc/server";
 import { Article } from "@prisma/client";
-import ArticleMemo from "@/app/_components/ArticleMemo";
-import { ArticleWithOgp } from "@/app/_components/ArticleList";
+import ArticleMemo from "@/components/ArticleMemo";
+import { ArticleWithOgp } from "@/components/ArticleList";
 import Link from "next/link";
 
 type Props = {
@@ -44,7 +44,7 @@ export default async function Page({ params }: Props) {
                   className="mb-2 h-auto w-60"
                 />
               ) : (
-                <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-md bg-gray-200 text-gray-500">
+                <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
                   No Image
                 </div>
               )}

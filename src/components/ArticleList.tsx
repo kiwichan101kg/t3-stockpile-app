@@ -49,12 +49,13 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
   // 合計ページ数
   const totalPages = Math.ceil(activeArticleList.length / itemsPerPage);
   // 現在表示されているデータ
-  const currentData = () => {
+  const getCurrentData = () => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return activeArticleList.slice(start, end);
   };
+  const currentData = getCurrentData();
   // 「＞」押下時
   const nextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
@@ -104,8 +105,11 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
         </div>
       </div>
 
+      {currentData.length === 0 && (
+        <p className="text-center text-gray-600">記事がありません</p>
+      )}
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
-        {currentData().map((article) => (
+        {currentData.map((article) => (
           <div
             key={article.id}
             className="relative flex flex-col justify-between rounded-lg bg-white p-6 shadow-md transition hover:shadow-lg"
@@ -144,7 +148,7 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                   className="mb-2 h-auto w-48"
                 />
               ) : (
-                <div className="mb-2 flex h-32 w-48 items-center justify-center rounded-md bg-gray-200 text-gray-500">
+                <div className="mb-2 flex h-32 w-48 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
                   No Image
                 </div>
               )}
