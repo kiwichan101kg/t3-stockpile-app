@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ArticleList, ArticleWithOgp } from "./_components/ArticleList";
-import { UrlBox } from "./_components/UrlBox";
+import { ArticleList, ArticleWithOgp } from "../components/ArticleList";
+import { UrlBox } from "../components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { getOgps } from "@/lib/getOgp";
-import { Pagination } from "./_components/Pagenation";
+import { Pagination } from "../components/Pagenation";
 
 type Article = {
   id: string;
