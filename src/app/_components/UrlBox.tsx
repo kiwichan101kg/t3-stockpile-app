@@ -59,7 +59,7 @@ export const UrlBox = () => {
           className={`absolute right-1.5 flex h-10 w-10 items-center justify-center rounded-full ${
             !url
               ? "text-white disabled:cursor-not-allowed disabled:bg-gray-300 disabled:hover:bg-gray-300"
-              : "bg-gradient-to-r from-blue-500 to-teal-500 text-white transition duration-300 hover:from-blue-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              : "bg-blue-400 text-white transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           }`}
           disabled={!url} // urlがない場合に非活性にする
         >
@@ -124,7 +124,7 @@ export const UrlBox = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 px-6 py-3 text-white shadow-lg transition duration-300 hover:from-blue-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="inline-flex items-center gap-2 rounded-full bg-blue-400 px-6 py-3 text-white shadow-lg transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               保存
             </button>

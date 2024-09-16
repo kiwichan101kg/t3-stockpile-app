@@ -4,6 +4,7 @@ import { UrlBox } from "./_components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { getOgps } from "@/lib/getOgp";
+import { Pagination } from "./_components/Pagenation";
 
 type Article = {
   id: string;

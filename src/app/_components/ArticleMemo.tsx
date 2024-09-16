@@ -53,7 +53,7 @@ const ArticleMemo = ({ article }: ArticleMemoProps) => {
       <div className="flex justify-end">
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 px-6 py-3 text-white shadow-lg transition duration-300 hover:from-blue-600 hover:to-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="inline-flex items-center gap-2 rounded-full bg-blue-400 px-6 py-3 text-white shadow-lg transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           更新
         </button>
