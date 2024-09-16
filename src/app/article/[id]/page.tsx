@@ -36,12 +36,17 @@ export default async function Page({ params }: Props) {
 
             {/* 記事の内容 */}
             <div className="flex flex-col md:flex-row md:items-start md:space-x-4">
-              {article?.ogp?.ogImage && article?.ogp?.ogImage.length > 0 && (
+              {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={article.ogp.ogImage[0]?.url}
-                  alt={article.ogp.ogImage[0]?.alt ?? "OGP Image"}
-                  className="h-auto w-60 rounded-md border"
+                  src={article.ogp?.ogImage[0]?.url}
+                  alt={article.ogp?.ogImage[0]?.alt ?? "OGP Image"}
+                  className="mb-2 h-auto w-60"
                 />
+              ) : (
+                <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-md bg-gray-200 text-gray-500">
+                  No Image
+                </div>
               )}
 
               <div className="mt-4 md:mt-0">
