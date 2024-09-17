@@ -3,7 +3,7 @@ import { api, HydrateClient } from "@/trpc/server";
 import { Article } from "@prisma/client";
 import ArticleMemo from "@/components/ArticleMemo";
 import { ArticleWithOgp } from "@/components/ArticleList";
-import Link from "next/link";
+import { Logo } from "@/components/Logo";
 
 type Props = {
   params: {
@@ -11,6 +11,19 @@ type Props = {
   };
   searchParams: Record<string, string | string[] | undefined>;
 };
+const commentArr = [
+  "技術記事をたくさん集めてスキルアップ📚✨",
+  "今日も1日コツコツ頑張ろう💪🔥",
+  "新しい知識を吸収して成長しよう🌱📖",
+  "頑張っている自分をしっかり褒めよう🎉✨",
+  "少しずつ積み重ねていけば、大きな成果に繋がるよ🚀🌟",
+  "継続は力なり！今日も一歩前進しよう🏃‍♂️📈",
+  "自分のペースでゆっくり進もう🌸🍀",
+];
+const getRandomComment = () => {
+  return commentArr[Math.floor(Math.random() * commentArr.length)];
+};
+
 export default async function Page({ params }: Props) {
   const response: Article = await api.article.getArticleById({ id: params.id });
   const ogp = await getOgp(response.url);
@@ -21,10 +34,10 @@ export default async function Page({ params }: Props) {
       <main className="min-h-screen bg-gray-100 p-6">
         {/* Header Section */}
         <header className="mb-8 flex items-center justify-between">
-          <Link href={"/"}>
-            <h1 className="text-3xl font-bold text-gray-900">Tech📚Stock</h1>
-            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
-          </Link>
+          <div>
+            <Logo />
+            <p className="mt-2 text-gray-600">{getRandomComment()}</p>
+          </div>{" "}
         </header>
 
         <div className="container mx-auto max-w-2xl p-6">
