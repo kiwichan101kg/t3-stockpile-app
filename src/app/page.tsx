@@ -4,7 +4,7 @@ import { UrlBox } from "../components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { getOgps } from "@/lib/getOgp";
-import { Pagination } from "../components/Pagenation";
+import { Logo } from "@/components/Logo";
 
 type Article = {
   id: string;
@@ -21,19 +21,17 @@ export default async function Home() {
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
-        <div className="rounded-lg bg-white p-8 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Welcome to Our Service
-          </h2>
-          <p className="mt-4 text-gray-600">
-            Please sign in to continue and access personalized features.
-          </p>
+        <div className="rounded-lg bg-white px-12 py-8 shadow-lg">
+          <div>
+            <Logo />
+            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
+          </div>
           <div className="mt-6">
             <Link
               href={"/api/auth/signin/google?callbackUrl=/"}
-              className="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-lg font-medium text-white transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+              className="inline-flex w-full items-center justify-center rounded-md bg-blue-500 px-6 py-3 text-lg font-medium text-white transition duration-300 hover:bg-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-300"
             >
-              Sign in with Google
+              Googleログインではじめる
             </Link>
           </div>
         </div>
@@ -49,10 +47,10 @@ export default async function Home() {
       <main className="min-h-screen bg-gray-100 p-6">
         {/* Header Section */}
         <header className="mb-8 flex items-center justify-between">
-          <Link href={"/"}>
-            <h1 className="text-3xl font-bold text-gray-800">Tech📚Stock</h1>
+          <div>
+            <Logo />
             <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
-          </Link>
+          </div>
 
           {/* ログイン・ログアウトボタン */}
           <div>
@@ -77,24 +75,20 @@ export default async function Home() {
 
           {/* リンク部分 */}
           <div className="mt-4 flex space-x-6 md:mt-0">
-            <a
-              href="#"
+            <Link
+              href={"/info/terms"}
+              target="_blank"
               className="text-sm text-gray-600 transition hover:text-gray-900"
             >
               利用規約
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href={"/info/privacy-policy"}
+              target="_blank"
               className="text-sm text-gray-600 transition hover:text-gray-900"
             >
               プライバシーポリシー
-            </a>
-            <a
-              href="#"
-              className="text-sm text-gray-600 transition hover:text-gray-900"
-            >
-              サポート
-            </a>
+            </Link>
           </div>
         </div>
       </footer>
