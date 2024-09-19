@@ -96,7 +96,7 @@ export default async function Home() {
   );
 }
 
-export const enrichArticlesWithOgp = async (articleList: Article[]) => {
+const enrichArticlesWithOgp = async (articleList: Article[]) => {
   const urlArr = articleList.filter((item) => item.url).map((item) => item.url);
   const ogps = await getOgps(urlArr);
   const enrichedArticles = articleList.map((article) => {
