@@ -4,6 +4,7 @@ import { Article } from "@prisma/client";
 import ArticleMemo from "@/components/ArticleMemo";
 import { ArticleWithOgp } from "@/components/ArticleList";
 import { Logo } from "@/components/Logo";
+import { Footer } from "@/components/Footer";
 
 type Props = {
   params: {
@@ -72,7 +73,7 @@ export default async function Page({ params }: Props) {
             {/* ボタンの配置 */}
             <div className="mt-4 flex justify-between space-x-4">
               {/* 記事を読むボタン */}
-              <div className="w-1/4">
+              <div className="w-1/2 md:w-1/4">
                 <a
                   href={article.url}
                   target="_blank"
@@ -102,36 +103,7 @@ export default async function Page({ params }: Props) {
           <ArticleMemo article={article} />
         </div>
       </main>
-      <footer className="border-t border-gray-200 bg-white py-4">
-        <div className="container mx-auto flex flex-col items-center justify-between md:flex-row">
-          {/* コピーライト部分 */}
-          <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} Tech📚Stock. All rights reserved.
-          </p>
-
-          {/* リンク部分 */}
-          <div className="mt-4 flex space-x-6 md:mt-0">
-            <a
-              href="#"
-              className="text-sm text-gray-600 transition hover:text-gray-900"
-            >
-              利用規約
-            </a>
-            <a
-              href="#"
-              className="text-sm text-gray-600 transition hover:text-gray-900"
-            >
-              プライバシーポリシー
-            </a>
-            <a
-              href="#"
-              className="text-sm text-gray-600 transition hover:text-gray-900"
-            >
-              サポート
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </HydrateClient>
   );
 }

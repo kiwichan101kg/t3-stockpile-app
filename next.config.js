@@ -5,8 +5,6 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {
-  // Next.jsの設定をここに追加する
-};
+const config = {};
 
 export default config;

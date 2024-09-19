@@ -24,7 +24,7 @@ const ArticleMemo = ({ article }: ArticleMemoProps) => {
           <select
             id="status"
             name="status"
-            className="mb-4 w-1/4 rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm transition duration-200 ease-in-out hover:shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="mb-4 w-1/2 rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 shadow-sm transition duration-200 ease-in-out hover:shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 md:w-1/4"
             defaultValue={article.status}
           >
             <option value="notRead">読みたい</option>
