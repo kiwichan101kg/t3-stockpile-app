@@ -58,7 +58,7 @@ export const UrlBox = () => {
           type="submit"
           className={`absolute right-1.5 flex h-10 w-10 items-center justify-center rounded-full ${
             !url
-              ? "text-white  disabled:bg-gray-300 disabled:hover:bg-gray-300"
+              ? "text-white disabled:bg-gray-300 disabled:hover:bg-gray-300"
               : "bg-blue-400 text-white transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           }`}
           disabled={!url} // urlがない場合に非活性にする

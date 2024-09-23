@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { ArticleList, ArticleWithOgp } from "../components/ArticleList";
+import { ArticleList, type ArticleWithOgp } from "../components/ArticleList";
 import { UrlBox } from "../components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import { getOgps } from "@/lib/getOgp";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
+import { HamburgerMenu } from "@/components/HamburgerMenu";
 
 type Article = {
   id: string;
@@ -52,16 +53,7 @@ export default async function Home() {
             <Logo />
             <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
           </div>
-
-          {/* ログイン・ログアウトボタン */}
-          <div>
-            <Link
-              href={"api/auth/signout"}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-300"
-            >
-              ログアウト
-            </Link>
-          </div>
+          <HamburgerMenu />
         </header>
 
         <UrlBox />

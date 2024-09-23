@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ArticleWithOgp } from "./ArticleList";
+import { type ArticleWithOgp } from "./ArticleList";
 import { formatDate } from "@/lib/formatDate";
 import { useFormState } from "react-dom";
 import { updateAction } from "@/lib/updateAction";
