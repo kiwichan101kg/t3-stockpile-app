@@ -71,7 +71,9 @@ export default async function Home() {
         <header className="mb-8 flex items-center justify-between">
           <div>
             <Logo />
-            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
+            <p className="mt-2 text-sm text-gray-600 sm:text-lg">
+              技術記事をたくさん集めよう🔥
+            </p>
           </div>
           <HamburgerMenu />
         </header>
