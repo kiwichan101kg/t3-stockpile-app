@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Tech Stock",
     description:
       "技術記事を効率よく管理！読みたい記事をストックして、進行状況を整理し、学びの記録を残せるアプリ",
