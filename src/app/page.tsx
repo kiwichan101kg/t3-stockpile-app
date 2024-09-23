@@ -36,6 +36,26 @@ export default async function Home() {
               Googleログインではじめる
             </Link>
           </div>
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-500">
+              <Link
+                target="_blank"
+                href="/info/terms"
+                className="text-blue-500 hover:underline"
+              >
+                利用規約
+              </Link>{" "}
+              と{" "}
+              <Link
+                target="_blank"
+                href="/info/privacy-policy"
+                className="text-blue-500 hover:underline"
+              >
+                プライバシーポリシー
+              </Link>{" "}
+              に同意した上でログインしてください。
+            </p>
+          </div>
         </div>
       </div>
     );
