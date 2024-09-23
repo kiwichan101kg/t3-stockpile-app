@@ -1,10 +1,11 @@
 import { getOgp } from "@/lib/getOgp";
 import { api, HydrateClient } from "@/trpc/server";
-import { Article } from "@prisma/client";
+import { type Article } from "@prisma/client";
 import ArticleMemo from "@/components/ArticleMemo";
-import { ArticleWithOgp } from "@/components/ArticleList";
+import { type ArticleWithOgp } from "@/components/ArticleList";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
+import Link from "next/link";
 
 type Props = {
   params: {
@@ -35,13 +36,35 @@ export default async function Page({ params }: Props) {
       <main className="min-h-screen bg-gray-100 p-6">
         {/* Header Section */}
         <header className="mb-8 flex items-center justify-between">
-          <div>
+          {/* 戻るボタン */}
+          <Link
+            href={"/"}
+            className="inline-flex items-center justify-center rounded-full bg-gray-200 p-2 text-gray-700 transition hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </Link>
+
+          {/* 中央のロゴとテキスト */}
+          {/* <div className="flex flex-1 flex-col items-center justify-center">
             <Logo />
-            <p className="mt-2 text-gray-600">{getRandomComment()}</p>
-          </div>{" "}
+            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
+          </div> */}
         </header>
 
-        <div className="container mx-auto max-w-2xl p-6">
+        <div className="container mx-auto max-w-2xl sm:p-0 md:p-6">
           <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
             {/* 記事のタイトル */}
             <h2 className="mb-4 text-2xl font-bold text-gray-900">
