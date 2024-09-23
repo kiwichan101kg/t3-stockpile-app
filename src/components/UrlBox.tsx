@@ -3,8 +3,9 @@ import { createAction } from "@/lib/createAction";
 import { ogpAction } from "@/lib/ogpAction";
 import { useRouter } from "next/navigation";
 import { OgObject } from "open-graph-scraper/types";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
+import { LoadingOverlay } from "./LoadingOverlay";
 
 export const UrlBox = () => {
   const [ogpState, ogpActionState] = useFormState(ogpAction, null);
@@ -15,6 +16,7 @@ export const UrlBox = () => {
   });
   const [url, setUrl] = useState("");
   const [ogp, setOgp] = useState<OgObject | null>(null);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   useEffect(() => {
@@ -37,10 +39,22 @@ export const UrlBox = () => {
     }
   };
 
+  const hundleSubmitUrl = (formData: FormData) => {
+    startTransition(() => {
+      ogpActionState(formData);
+    });
+  };
+
+  const hundleSubmitSave = (formData: FormData) => {
+    startTransition(() => {
+      createActionState(formData);
+    });
+  };
+
   return (
     <section>
       <form
-        action={ogpActionState}
+        action={hundleSubmitUrl}
         className="relative mb-6 flex w-full max-w-md items-center"
       >
         {/* 入力フィールド */}
@@ -57,11 +71,11 @@ export const UrlBox = () => {
         <button
           type="submit"
           className={`absolute right-1.5 flex h-10 w-10 items-center justify-center rounded-full ${
-            !url
+            !url || isPending
               ? "text-white disabled:bg-gray-300 disabled:hover:bg-gray-300"
               : "bg-blue-400 text-white transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           }`}
-          disabled={!url} // urlがない場合に非活性にする
+          disabled={!url || isPending} // urlがない場合に非活性にする
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +96,7 @@ export const UrlBox = () => {
 
       {ogp && (
         <form
-          action={createActionState}
+          action={hundleSubmitSave}
           className="mb-6 max-w-md rounded-lg bg-white p-4 shadow-md"
         >
           <h2 className="mb-2 text-xl font-semibold">
@@ -124,13 +138,20 @@ export const UrlBox = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-full bg-blue-400 px-6 py-3 text-white shadow-lg transition duration-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-white shadow-lg transition duration-300 ${
+                isPending
+                  ? "cursor-not-allowed bg-gray-400"
+                  : "bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              }`}
+              disabled={isPending}
             >
-              保存
+              {isPending ? "保存中..." : "保存"}
             </button>
           </div>
         </form>
       )}
+
+      {isPending && <LoadingOverlay />}
     </section>
   );
 };

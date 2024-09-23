@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { OgObject } from "open-graph-scraper/types";
 import React, { useState } from "react";
 import { Pagination } from "./Pagenation";
+import { LoadingOverlay } from "./LoadingOverlay";
 
 export type ArticleWithOgp = {
   id: string;
@@ -35,7 +36,7 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
     onSuccess: async () => {
       revalidatePath("/");
       // articleに関するキャッシュの削除
-      await utils.article.getAllArticle.invalidate();
+      await utils.article.getAllArticle.refetch();
     },
   });
 
@@ -203,6 +204,8 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
           </div>
         ))}
       </div>
+
+      {deleteArticle.isPending && <LoadingOverlay />}
 
       <div className="mt-auto p-2">
         <Pagination {...props} />
