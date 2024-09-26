@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   title: "Tech Stock",
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
     title: "Tech Stock",
     description:
       "技術記事を効率よく管理！読みたい記事をストックして、進行状況を整理し、学びの記録を残せるアプリ",
-    images: ["public/images/opengraph-image.jpeg"],
+    images: ["/images/opengraph-image.jpeg"],
   },
 };
 
@@ -41,6 +43,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
+      <GoogleAnalytics gaId={env.GOOGLE_ANALYTICS_GAID} />
     </html>
   );
 }
