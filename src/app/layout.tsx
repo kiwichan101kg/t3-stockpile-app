@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "Tech Stock",
     images: [
       {
-        url: "/images/opengraph-image.jpeg",
+        url: "/opengraph-image.jpeg",
         width: 1200,
         height: 630,
       },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "Tech Stock",
     description:
       "技術記事を効率よく管理！読みたい記事をストックして、進行状況を整理し、学びの記録を残せるアプリ",
-    images: ["/images/opengraph-image.jpeg"],
+    images: ["/twitter-image.jpeg"],
   },
 };
 
@@ -39,7 +39,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="ja" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
