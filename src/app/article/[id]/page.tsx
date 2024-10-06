@@ -5,10 +5,11 @@ import ArticleMemo from "@/components/ArticleMemo";
 import { type ArticleWithInfo } from "@/components/ArticleList";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
-import { isOgObject, isXPostObject } from "@/utils/typeGuards";
+import { isOgObject, isXPostObject, isYoutubeObject } from "@/utils/typeGuards";
 import { ReactParser } from "@/components/ReactParser";
 import { getXPost, isXUrl, XPostObject } from "@/lib/getXpost";
 import { OgObject } from "open-graph-scraper/types";
+import { getYouTube, isYouTubeUrl, YouTubeObject } from "@/lib/getYoutube";
 
 type Props = {
   params: {
@@ -19,10 +20,14 @@ type Props = {
 
 const getArticleInfo = async (
   url: string,
-): Promise<OgObject | XPostObject | null> => {
+): Promise<OgObject | XPostObject | YouTubeObject | null> => {
   if (isXUrl(url)) {
     const xPost = await getXPost(url);
     return xPost;
+  }
+  if (isYouTubeUrl(url)) {
+    const youtube = await getYouTube(url);
+    return youtube;
   }
   const ogp = await getOgp(url);
   return ogp;
@@ -96,6 +101,33 @@ export default async function Page({ params }: Props) {
               <div>
                 <ReactParser tweetHTML={article.info?.html || ""} />
               </div>
+            )}
+            {isYoutubeObject(article.info) && (
+              <>
+                <h2 className="mb-4 text-2xl font-bold text-gray-900">
+                  {article.info?.title ?? "No Title"}
+                </h2>
+
+                {/* 記事の内容 */}
+                <div className="flex flex-col items-start gap-4 md:flex-row">
+                  {article.info?.thumbnail_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={article.info?.thumbnail_url}
+                      alt={article.info?.title ?? "info Image"}
+                      className="mb-2 h-auto w-60"
+                    />
+                  ) : (
+                    <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
+                      No Image
+                    </div>
+                  )}
+
+                  <div className="flex-1">
+                    <ReactParser tweetHTML={article.info?.html || ""} />
+                  </div>
+                </div>
+              </>
             )}
 
             {/* ボタンの配置 */}

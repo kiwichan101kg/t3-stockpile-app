@@ -7,7 +7,8 @@ import { Pagination } from "./Pagenation";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { ReactParser } from "./ReactParser";
 import { XPostObject } from "@/lib/getXpost";
-import { isOgObject, isXPostObject } from "@/utils/typeGuards";
+import { isOgObject, isXPostObject, isYoutubeObject } from "@/utils/typeGuards";
+import { YouTubeObject } from "@/lib/getYoutube";
 
 export type ArticleWithInfo = {
   id: string;
@@ -17,7 +18,7 @@ export type ArticleWithInfo = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  info: OgObject | XPostObject | null;
+  info: OgObject | XPostObject | YouTubeObject | null;
 };
 
 type ArticleListProps = {
@@ -171,6 +172,29 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                     />
                     <ReactParser tweetHTML={article.info?.html || ""} />
                   </div>
+                )}
+                {isYoutubeObject(article.info) && (
+                  <>
+                    <h2 className="mb-2 text-xl font-semibold">
+                      {article.info?.title ?? "No Title"}
+                    </h2>
+                    <input
+                      type="hidden"
+                      name="url"
+                      value={article.info?.original_url ?? ""}
+                    />
+
+                    <div className="mb-4 flex">
+                      {article.info?.thumbnail_url && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={article.info?.thumbnail_url}
+                          alt={article.info?.title ?? "OGP Image"}
+                          className="mb-2 h-auto w-48"
+                        />
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
 
