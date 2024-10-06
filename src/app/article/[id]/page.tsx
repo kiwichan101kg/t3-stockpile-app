@@ -2,10 +2,13 @@ import { getOgp } from "@/lib/getOgp";
 import { api, HydrateClient } from "@/trpc/server";
 import { type Article } from "@prisma/client";
 import ArticleMemo from "@/components/ArticleMemo";
-import { type ArticleWithOgp } from "@/components/ArticleList";
-import { Logo } from "@/components/Logo";
+import { type ArticleWithInfo } from "@/components/ArticleList";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
+import { isOgObject, isXPostObject } from "@/utils/typeGuards";
+import { ReactParser } from "@/components/ReactParser";
+import { getXPost, isXUrl, XPostObject } from "@/lib/getXpost";
+import { OgObject } from "open-graph-scraper/types";
 
 type Props = {
   params: {
@@ -13,23 +16,22 @@ type Props = {
   };
   searchParams: Record<string, string | string[] | undefined>;
 };
-const commentArr = [
-  "技術記事をたくさん集めてスキルアップ📚✨",
-  "今日も1日コツコツ頑張ろう💪🔥",
-  "新しい知識を吸収して成長しよう🌱📖",
-  "頑張っている自分をしっかり褒めよう🎉✨",
-  "少しずつ積み重ねていけば、大きな成果に繋がるよ🚀🌟",
-  "継続は力なり！今日も一歩前進しよう🏃‍♂️📈",
-  "自分のペースでゆっくり進もう🌸🍀",
-];
-const getRandomComment = () => {
-  return commentArr[Math.floor(Math.random() * commentArr.length)];
+
+const getArticleInfo = async (
+  url: string,
+): Promise<OgObject | XPostObject | null> => {
+  if (isXUrl(url)) {
+    const xPost = await getXPost(url);
+    return xPost;
+  }
+  const ogp = await getOgp(url);
+  return ogp;
 };
 
 export default async function Page({ params }: Props) {
   const response: Article = await api.article.getArticleById({ id: params.id });
-  const ogp = await getOgp(response.url);
-  const article: ArticleWithOgp = { ...response, ogp: ogp };
+  const articleInfo = await getArticleInfo(response.url);
+  const article: ArticleWithInfo = { ...response, info: articleInfo };
 
   return (
     <HydrateClient>
@@ -56,42 +58,45 @@ export default async function Page({ params }: Props) {
               />
             </svg>
           </Link>
-
-          {/* 中央のロゴとテキスト */}
-          {/* <div className="flex flex-1 flex-col items-center justify-center">
-            <Logo />
-            <p className="mt-2 text-gray-600">技術記事をたくさん集めよう🔥</p>
-          </div> */}
         </header>
 
         <div className="container mx-auto max-w-2xl sm:p-0 md:p-6">
           <div className="mb-8 rounded-lg bg-white p-6 shadow-md">
             {/* 記事のタイトル */}
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">
-              {ogp?.ogTitle ?? "No Title"}
-            </h2>
+            {isOgObject(article.info) && (
+              <>
+                <h2 className="mb-4 text-2xl font-bold text-gray-900">
+                  {article.info?.ogTitle ?? "No Title"}
+                </h2>
+                {/* 記事の内容 */}
 
-            {/* 記事の内容 */}
-            <div className="flex flex-col md:flex-row md:items-start md:space-x-4">
-              {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={article.ogp?.ogImage[0]?.url}
-                  alt={article.ogp?.ogImage[0]?.alt ?? "OGP Image"}
-                  className="mb-2 h-auto w-60"
-                />
-              ) : (
-                <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
-                  No Image
+                <div className="flex flex-col md:flex-row md:items-start md:space-x-4">
+                  {article.info?.ogImage && article.info?.ogImage.length > 0 ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={article.info?.ogImage[0]?.url}
+                      alt={article.info?.ogImage[0]?.alt ?? "info Image"}
+                      className="mb-2 h-auto w-60"
+                    />
+                  ) : (
+                    <div className="mb-2 flex h-32 w-60 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
+                      No Image
+                    </div>
+                  )}
+
+                  <div className="mt-4 md:mt-0">
+                    <p className="mb-4 text-gray-600">
+                      {article?.info?.ogDescription ?? "No Description"}
+                    </p>
+                  </div>
                 </div>
-              )}
-
-              <div className="mt-4 md:mt-0">
-                <p className="mb-4 text-gray-600">
-                  {article?.ogp?.ogDescription ?? "No Description"}
-                </p>
+              </>
+            )}
+            {isXPostObject(article.info) && (
+              <div>
+                <ReactParser tweetHTML={article.info?.html || ""} />
               </div>
-            </div>
+            )}
 
             {/* ボタンの配置 */}
             <div className="mt-4 flex justify-between space-x-4">

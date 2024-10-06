@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArticleList, type ArticleWithOgp } from "../components/ArticleList";
+import { ArticleList, type ArticleWithInfo } from "../components/ArticleList";
 import { UrlBox } from "../components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
@@ -7,6 +7,7 @@ import { getOgps } from "@/lib/getOgp";
 import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
 import { HamburgerMenu } from "@/components/HamburgerMenu";
+import { getXPosts, isXUrl } from "@/lib/getXpost";
 
 type Article = {
   id: string;
@@ -61,13 +62,12 @@ export default async function Home() {
     );
   }
   const articleList: Article[] = await api.article.getAllArticle();
-  const enrichedArticleList: ArticleWithOgp[] =
+  const enrichedArticleList: ArticleWithInfo[] =
     await enrichArticlesWithOgp(articleList);
 
   return (
     <HydrateClient>
       <main className="min-h-screen bg-gray-100 p-6">
-        {/* Header Section */}
         <header className="mb-8 flex items-center justify-between">
           <div>
             <Logo />
@@ -88,13 +88,22 @@ export default async function Home() {
 
 const enrichArticlesWithOgp = async (articleList: Article[]) => {
   const urlArr = articleList.filter((item) => item.url).map((item) => item.url);
-  const ogps = await getOgps(urlArr);
+
+  // XのURL配列を取得
+  const xUrlArr = urlArr.filter((url) => isXUrl(url));
+  // X以外のURL配列は、urlArrからxUrlArrを除いた残り
+  const otherUrlArr = urlArr.filter((url) => !xUrlArr.includes(url));
+
+  const xPosts = await getXPosts(xUrlArr);
+  const ogps = await getOgps(otherUrlArr);
+
   const enrichedArticles = articleList.map((article) => {
     // 該当するURLのOGPデータを見つける
     const ogp = ogps.find((ogpItem) => ogpItem.ogUrl === article.url);
+    const xPost = xPosts.find((xPostItem) => xPostItem.url === article.url);
     return {
       ...article,
-      ogp: ogp ?? null,
+      info: ogp ?? xPost ?? null,
     };
   });
   return enrichedArticles;

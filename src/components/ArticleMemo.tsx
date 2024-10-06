@@ -1,13 +1,13 @@
 "use client";
 import React, { useTransition } from "react";
-import { type ArticleWithOgp } from "./ArticleList";
+import { type ArticleWithInfo } from "./ArticleList";
 import { formatDate } from "@/lib/formatDate";
 import { useFormState } from "react-dom";
 import { updateAction } from "@/lib/updateAction";
 import { LoadingOverlay } from "./LoadingOverlay";
 
 type ArticleMemoProps = {
-  article: ArticleWithOgp;
+  article: ArticleWithInfo;
 };
 const ArticleMemo = ({ article }: ArticleMemoProps) => {
   const [state, updateActionState] = useFormState(updateAction, {

@@ -6,6 +6,9 @@ import { OgObject } from "open-graph-scraper/types";
 import React, { ChangeEvent, useEffect, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { LoadingOverlay } from "./LoadingOverlay";
+import { XPostObject } from "@/lib/getXpost";
+import { ReactParser } from "./ReactParser";
+import { isOgObject, isXPostObject } from "@/utils/typeGuards";
 
 export const UrlBox = () => {
   const [ogpState, ogpActionState] = useFormState(ogpAction, null);
@@ -15,7 +18,7 @@ export const UrlBox = () => {
     key: "",
   });
   const [url, setUrl] = useState("");
-  const [ogp, setOgp] = useState<OgObject | null>(null);
+  const [ogp, setOgp] = useState<OgObject | XPostObject | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -99,22 +102,32 @@ export const UrlBox = () => {
           action={hundleSubmitSave}
           className="mb-6 max-w-md rounded-lg bg-white p-4 shadow-md"
         >
-          <h2 className="mb-2 text-xl font-semibold">
-            {ogp?.ogTitle ?? "No Title"}
-          </h2>
+          {isOgObject(ogp) && (
+            <>
+              <h2 className="mb-2 text-xl font-semibold">
+                {ogp?.ogTitle ?? "No Title"}
+              </h2>
 
-          <input type="hidden" name="url" value={ogp?.ogUrl ?? ""} />
+              <input type="hidden" name="url" value={ogp?.ogUrl ?? ""} />
 
-          <div className="mb-4 flex">
-            {ogp?.ogImage && ogp?.ogImage.length > 0 && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={ogp?.ogImage[0]?.url}
-                alt={ogp?.ogImage[0]?.alt ?? "OGP Image"}
-                className="mb-2 h-auto w-48"
-              />
-            )}
-          </div>
+              <div className="mb-4 flex">
+                {ogp?.ogImage && ogp?.ogImage.length > 0 && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={ogp?.ogImage[0]?.url}
+                    alt={ogp?.ogImage[0]?.alt ?? "OGP Image"}
+                    className="mb-2 h-auto w-48"
+                  />
+                )}
+              </div>
+            </>
+          )}
+          {isXPostObject(ogp) && (
+            <div>
+              <input type="hidden" name="url" value={ogp?.url ?? ""} />
+              <ReactParser tweetHTML={ogp?.html || ""} />
+            </div>
+          )}
 
           <div className="mb-4">
             <select
