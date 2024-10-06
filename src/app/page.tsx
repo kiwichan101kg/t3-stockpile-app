@@ -8,6 +8,7 @@ import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
 import { HamburgerMenu } from "@/components/HamburgerMenu";
 import { getXPosts, isXUrl } from "@/lib/getXpost";
+import { getYouTubes, isYouTubeUrl } from "@/lib/getYoutube";
 
 type Article = {
   id: string;
@@ -91,19 +92,27 @@ const enrichArticlesWithOgp = async (articleList: Article[]) => {
 
   // XのURL配列を取得
   const xUrlArr = urlArr.filter((url) => isXUrl(url));
+  // YoutubeのURL配列を取得
+  const youtubeUrlArr = urlArr.filter((url) => isYouTubeUrl(url));
   // X以外のURL配列は、urlArrからxUrlArrを除いた残り
-  const otherUrlArr = urlArr.filter((url) => !xUrlArr.includes(url));
+  const otherUrlArr = urlArr.filter(
+    (url) => !xUrlArr.includes(url) && !youtubeUrlArr.includes(url),
+  );
 
   const xPosts = await getXPosts(xUrlArr);
+  const youtubes = await getYouTubes(youtubeUrlArr);
   const ogps = await getOgps(otherUrlArr);
 
   const enrichedArticles = articleList.map((article) => {
     // 該当するURLのOGPデータを見つける
     const ogp = ogps.find((ogpItem) => ogpItem.ogUrl === article.url);
     const xPost = xPosts.find((xPostItem) => xPostItem.url === article.url);
+    const youtube = youtubes.find(
+      (youtubeItem) => youtubeItem.original_url === article.url,
+    );
     return {
       ...article,
-      info: ogp ?? xPost ?? null,
+      info: xPost ?? youtube ?? ogp ?? null,
     };
   });
   return enrichedArticles;

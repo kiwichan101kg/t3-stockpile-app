@@ -8,7 +8,8 @@ import { useFormState } from "react-dom";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { XPostObject } from "@/lib/getXpost";
 import { ReactParser } from "./ReactParser";
-import { isOgObject, isXPostObject } from "@/utils/typeGuards";
+import { isOgObject, isXPostObject, isYoutubeObject } from "@/utils/typeGuards";
+import { YouTubeObject } from "@/lib/getYoutube";
 
 export const UrlBox = () => {
   const [ogpState, ogpActionState] = useFormState(ogpAction, null);
@@ -18,7 +19,9 @@ export const UrlBox = () => {
     key: "",
   });
   const [url, setUrl] = useState("");
-  const [ogp, setOgp] = useState<OgObject | XPostObject | null>(null);
+  const [ogp, setOgp] = useState<OgObject | XPostObject | YouTubeObject | null>(
+    null,
+  );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -27,6 +30,8 @@ export const UrlBox = () => {
     setOgp(null);
     router.refresh();
   }, [state.key]);
+
+  console.log("Youtube", ogp);
 
   useEffect(() => {
     if (ogpState) {
@@ -127,6 +132,26 @@ export const UrlBox = () => {
               <input type="hidden" name="url" value={ogp?.url ?? ""} />
               <ReactParser tweetHTML={ogp?.html || ""} />
             </div>
+          )}
+          {isYoutubeObject(ogp) && (
+            <>
+              <h2 className="mb-2 text-xl font-semibold">
+                {ogp?.title ?? "No Title"}
+              </h2>
+
+              <input type="hidden" name="url" value={ogp?.original_url ?? ""} />
+
+              <div className="mb-4 flex">
+                {ogp?.thumbnail_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={ogp?.thumbnail_url}
+                    alt={ogp?.title ?? "OGP Image"}
+                    className="mb-2 h-auto w-48"
+                  />
+                )}
+              </div>
+            </>
           )}
 
           <div className="mb-4">
