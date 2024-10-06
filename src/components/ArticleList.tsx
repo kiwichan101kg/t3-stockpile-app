@@ -25,10 +25,10 @@ type ArticleListProps = {
 };
 export const ArticleList = ({ articleList }: ArticleListProps) => {
   const tabs = [
-    { key: "all", label: "すべて" },
     { key: "notRead", label: "読みたい" },
     { key: "reading", label: "進行中" },
     { key: "read", label: "読んだ" },
+    { key: "all", label: "すべて" },
   ];
   const [activeTabr, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
