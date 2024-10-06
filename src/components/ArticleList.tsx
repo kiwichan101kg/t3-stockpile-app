@@ -9,7 +9,7 @@ import { ReactParser } from "./ReactParser";
 import { XPostObject } from "@/lib/getXpost";
 import { isOgObject, isXPostObject } from "@/utils/typeGuards";
 
-export type ArticleWithOgp = {
+export type ArticleWithInfo = {
   id: string;
   url: string;
   status: string;
@@ -17,11 +17,11 @@ export type ArticleWithOgp = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  ogp: OgObject | XPostObject | null;
+  info: OgObject | XPostObject | null;
 };
 
 type ArticleListProps = {
-  articleList: ArticleWithOgp[];
+  articleList: ArticleWithInfo[];
 };
 export const ArticleList = ({ articleList }: ArticleListProps) => {
   const tabs = [
@@ -142,16 +142,17 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
 
               {/* 記事の内容 */}
               <div>
-                {isOgObject(article.ogp) && (
+                {isOgObject(article.info) && (
                   <>
                     <h2 className="mb-2 mr-2 text-xl font-semibold">
-                      {article.ogp?.ogTitle ?? "No Title"}
+                      {article.info?.ogTitle ?? "No Title"}
                     </h2>
-                    {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 ? (
+                    {article.info?.ogImage &&
+                    article.info?.ogImage.length > 0 ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={article.ogp?.ogImage[0]?.url}
-                        alt={article.ogp?.ogImage[0]?.alt ?? "OGP Image"}
+                        src={article.info?.ogImage[0]?.url}
+                        alt={article.info?.ogImage[0]?.alt ?? "info Image"}
                         className="mb-2 h-auto w-48"
                       />
                     ) : (
@@ -161,14 +162,14 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
                     )}
                   </>
                 )}
-                {isXPostObject(article.ogp) && (
+                {isXPostObject(article.info) && (
                   <div>
                     <input
                       type="hidden"
                       name="url"
-                      value={article.ogp?.url ?? ""}
+                      value={article.info?.url ?? ""}
                     />
-                    <ReactParser tweetHTML={article.ogp?.html || ""} />
+                    <ReactParser tweetHTML={article.info?.html || ""} />
                   </div>
                 )}
               </div>

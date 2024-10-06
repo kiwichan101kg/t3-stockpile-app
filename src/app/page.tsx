@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArticleList, type ArticleWithOgp } from "../components/ArticleList";
+import { ArticleList, type ArticleWithInfo } from "../components/ArticleList";
 import { UrlBox } from "../components/UrlBox";
 import { api, HydrateClient } from "@/trpc/server";
 import { getServerAuthSession } from "@/server/auth";
@@ -62,7 +62,7 @@ export default async function Home() {
     );
   }
   const articleList: Article[] = await api.article.getAllArticle();
-  const enrichedArticleList: ArticleWithOgp[] =
+  const enrichedArticleList: ArticleWithInfo[] =
     await enrichArticlesWithOgp(articleList);
 
   return (
@@ -103,7 +103,7 @@ const enrichArticlesWithOgp = async (articleList: Article[]) => {
     const xPost = xPosts.find((xPostItem) => xPostItem.url === article.url);
     return {
       ...article,
-      ogp: ogp ?? xPost ?? null,
+      info: ogp ?? xPost ?? null,
     };
   });
   return enrichedArticles;
