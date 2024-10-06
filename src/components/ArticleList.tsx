@@ -5,6 +5,9 @@ import { OgObject } from "open-graph-scraper/types";
 import React, { useState } from "react";
 import { Pagination } from "./Pagenation";
 import { LoadingOverlay } from "./LoadingOverlay";
+import { ReactParser } from "./ReactParser";
+import { XPostObject } from "@/lib/getXpost";
+import { isOgObject, isXPostObject } from "@/utils/typeGuards";
 
 export type ArticleWithOgp = {
   id: string;
@@ -14,7 +17,7 @@ export type ArticleWithOgp = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  ogp: OgObject | null;
+  ogp: OgObject | XPostObject | null;
 };
 
 type ArticleListProps = {
@@ -111,97 +114,113 @@ export const ArticleList = ({ articleList }: ArticleListProps) => {
       )}
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
         {currentData.map((article) => (
-          <div
-            key={article.id}
-            className="relative flex flex-col justify-between rounded-lg bg-white p-6 shadow-md transition hover:shadow-lg"
-          >
-            {/* 削除ボタン（右上に配置） */}
-            <button
-              onClick={() => handleDelete(article.id)}
-              className="absolute right-2 top-2 flex items-center justify-center rounded-full bg-gray-100 p-1 transition hover:bg-red-100 focus:outline-none"
+          <>
+            <div
+              key={article.id}
+              className="relative flex flex-col justify-between rounded-lg bg-white p-6 shadow-md transition hover:shadow-lg"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-5 w-5 text-gray-400 hover:text-red-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {/* 記事の内容 */}
-            <div>
-              <h2 className="mb-2 mr-2 text-xl font-semibold">
-                {article.ogp?.ogTitle ?? "No Title"}
-              </h2>
-              {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={article.ogp?.ogImage[0]?.url}
-                  alt={article.ogp?.ogImage[0]?.alt ?? "OGP Image"}
-                  className="mb-2 h-auto w-48"
-                />
-              ) : (
-                <div className="mb-2 flex h-32 w-48 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
-                  No Image
-                </div>
-              )}
-            </div>
-
-            {/* リンクボタン */}
-            <div className="flex items-center justify-between pt-4">
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
+              {/* 削除ボタン（右上に配置） */}
+              <button
+                onClick={() => handleDelete(article.id)}
+                className="absolute right-2 top-2 flex items-center justify-center rounded-full bg-gray-100 p-1 transition hover:bg-red-100 focus:outline-none"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="h-5 w-5 text-blue-500"
+                  className="h-5 w-5 text-gray-400 hover:text-red-500"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                記事を読む
-              </a>
+              </button>
 
-              <a
-                href={`/article/${article.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-5 w-5 text-gray-700"
+              {/* 記事の内容 */}
+              <div>
+                {isOgObject(article.ogp) && (
+                  <>
+                    <h2 className="mb-2 mr-2 text-xl font-semibold">
+                      {article.ogp?.ogTitle ?? "No Title"}
+                    </h2>
+                    {article.ogp?.ogImage && article.ogp?.ogImage.length > 0 ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={article.ogp?.ogImage[0]?.url}
+                        alt={article.ogp?.ogImage[0]?.alt ?? "OGP Image"}
+                        className="mb-2 h-auto w-48"
+                      />
+                    ) : (
+                      <div className="mb-2 flex h-32 w-48 items-center justify-center rounded-sm bg-gray-200 text-gray-500">
+                        No Image
+                      </div>
+                    )}
+                  </>
+                )}
+                {isXPostObject(article.ogp) && (
+                  <div>
+                    <input
+                      type="hidden"
+                      name="url"
+                      value={article.ogp?.url ?? ""}
+                    />
+                    <ReactParser tweetHTML={article.ogp?.html || ""} />
+                  </div>
+                )}
+              </div>
+
+              {/* リンクボタン */}
+              <div className="flex items-center justify-between pt-4">
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 12h14M12 5l7 7-7 7"
-                  />
-                </svg>
-                メモを追加
-              </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-5 w-5 text-blue-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                  記事を読む
+                </a>
+
+                <a
+                  href={`/article/${article.id}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-gray-700 transition hover:bg-gray-100 hover:shadow-sm"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-5 w-5 text-gray-700"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 12h14M12 5l7 7-7 7"
+                    />
+                  </svg>
+                  メモを追加
+                </a>
+              </div>
             </div>
-          </div>
+          </>
         ))}
       </div>
 
