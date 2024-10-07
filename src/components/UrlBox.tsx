@@ -31,8 +31,6 @@ export const UrlBox = () => {
     router.refresh();
   }, [state.key]);
 
-  console.log("Youtube", ogp);
-
   useEffect(() => {
     if (ogpState) {
       setOgp(ogpState);
