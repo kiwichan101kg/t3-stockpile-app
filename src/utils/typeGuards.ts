@@ -23,6 +23,7 @@ export function isYoutubeObject(data: any): data is YouTubeObject {
   return (
     data &&
     typeof data.html === "string" &&
-    typeof data.author_name === "string"
+    typeof data.author_name === "string" &&
+    typeof data.thumbnail_url === "string"
   );
 }
